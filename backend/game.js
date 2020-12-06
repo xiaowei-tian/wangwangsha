@@ -15,7 +15,6 @@ function createNewGame(identities, totalPlayer, callback) {
           connection.release()
           // Handle error after the release.
           if (error) return callback(error)
-
           callback(null, gameId);
         });
       });

@@ -2,20 +2,94 @@
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-  $("button").click(function(){
-    $.get("http://localhost:3000/createGame", function(data, status){
-      $('#newGame').html(data)
-      $('#createGame').hide();
-    });
-  });
-});
+<script type="text/javascript">
+    function createGame() {
+        var totalPlayer = Number(document.forms["gameForm"]["totalPlayer"].value)
+        var peopleNum = Number(document.forms["gameForm"]["people"].value)
+        var seerNum = Number(document.forms["gameForm"]["seer"].value)
+        var werewolfNum = Number(document.forms["gameForm"]["werewolf"].value)
+        var wolfkingNum = Number(document.forms["gameForm"]["wolfking"].value)
+        var witchNum = Number(document.forms["gameForm"]["witch"].value)
+        var hunterNum = Number(document.forms["gameForm"]["hunter"].value)
+        var idiotNum = Number(document.forms["gameForm"]["idiot"].value)
+        var silenceNum = Number(document.forms["gameForm"]["silence"].value)
+        var littlegirlNum = Number(document.forms["gameForm"]["littlegirl"].value)
+        
+        if ((totalPlayer * 2) != (peopleNum + seerNum + werewolfNum + wolfkingNum + witchNum + hunterNum + idiotNum + silenceNum + littlegirlNum)) {
+            alert("配置错误")
+        } else if (werewolfNum + wolfkingNum < 3) {
+            alert("配置错误")
+        } else {
+            // Create Game
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:3000/createGame',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    totalPlayer: totalPlayer,
+                    peopleNum: peopleNum,
+                    werewolfNum: werewolfNum,
+                    wolfkingNum: wolfkingNum,
+                    seerNum: seerNum,
+                    witchNum: witchNum,
+                    hunterNum: hunterNum,
+                    idiotNum: idiotNum,
+                    silenceNum: silenceNum,
+                    littlegirlNum: littlegirlNum
+                },
+                success: function(response) {
+                    $('#newGame').html(response)
+                    $('#createGame').hide();
+                    $('#init').hide();
+                },
+                error: function(response) {
+                    alert("shit happened")
+                }
+            })
+        }
+    }
 </script>
 </head>
 <body>
-<p></p>
-<button id="createGame">创建游戏</button>
+<h1>旺旺杀法官小助手</h1>
+<div id="init" style="padding: 1cm;">
+    <form id="gameForm">
+        <label for="totalPlayer">玩家总数：</label>
+        <input type="number" class="form-control" id="totalPlayer" min="1">
+        <br>
+        <label for="people">平民：</label>
+        <input type="number" class="form-control" id="people" min="1">
+        <br>
+        <label for="werewolf">狼人：</label>
+        <input type="number" class="form-control" id="werewolf" value="2" min="1">
+        <br>
+        <label for="wolfking">狼王：</label>
+        <input type="number" class="form-control" id="wolfking" value="1" min="1">
+        <br>
+        <label for="seer">预言家：</label>
+        <input type="number" class="form-control" id="seer" value="1" min="1">
+        <br>
+        <label for="witch">女巫：</label>
+        <input type="number" class="form-control" id="witch" value="1" min="1">
+        <br>
+        <label for="hunter">猎人：</label>
+        <input type="number" class="form-control" id="hunter" value="1" min="1">
+        <br>
+        <label for="idiot">白痴：</label>
+        <input type="number" class="form-control" id="idiot" value="1" min="0">
+        <br>
+        <label for="silence">禁言长老：</label>
+        <input type="number" class="form-control" id="silence" value="1" min="0">
+        <br>
+        <label for="littlegirl">小女孩：</label>
+        <input type="number" class="form-control" id="littlegirl" value="1" min="0">
+    </form>
+</div>
+<div>
+    <button id="createGame" onclick="createGame()">创建游戏</button>
+</div>
 <div id="newGame"></div>
 </body>
 </html>

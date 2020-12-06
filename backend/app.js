@@ -7,6 +7,7 @@
 6：猎人
 7：白痴
 8：禁言长老
+9：小女孩
 */
 var cors = require('cors')
 const express = require('express')
@@ -26,8 +27,6 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getIdentity', (req,res) => {
-  console.log(req.query.gameId)
-  console.log(req.query.playerId)
   identityLoader.loadIdentityByGameId(req.query.gameId, req.query.playerId, function(err, result){
     console.log(result)
     if (err) {
@@ -38,7 +37,8 @@ app.get('/getIdentity', (req,res) => {
   })
 })
 
-app.post('/createGame', (req, res) => {
+app.get('/createGame', (req, res) => {
+  console.log(req.query.totalPlayer)
   var identities = identityGenerator.generateIdentity(defaultIdentityList, defaultTotalPlayer)
   var result = parser.parseAll(identities, defaultTotalPlayer)
   game.createNewGame(identities, defaultTotalPlayer, function(err, gameId) {
