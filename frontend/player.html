@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    var gid = document.forms["form"]["gameId"].value
+    var pid = document.forms["form"]["playerId"].value
+    $.ajax({
+		method: 'GET' ,
+		url: 'http://localhost:3000/getIdentity',
+        data: {
+            gameId: gid,
+            playerId: pid
+        },
+		success: function(response){
+			$('#myIdentity').html(response);
+            $('#loadIdentity').hide();
+        },
+        error: function(xhr) {
+            $('#myIdentity').html('shit happened');
+            $('#loadIdentity').hide();
+        }
+	});
+  });
+});
+</script>
+</head>
+<body>
+    <form id="form" role="form" style="width: 100%">
+        <div class="form-group">
+            <label for="PhoneNumberInput">房间号：</label>
+            <input type="text" class="form-control" id="gameId">
+        </div>
+        <div class="form-group">
+            <label for="RegCodeInput">玩家号：</label>
+            <input type="text" class="form-control" id="playerId">
+        </div>
+    </form>
+    <button id="loadIdentity">获取身份</button>
+    <div id="myIdentity"></div>
+</body>
+</html>
