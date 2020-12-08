@@ -23,6 +23,7 @@ function parsePlayer(identity) {
 }
 
 function translate(id) {
+    if (id == 0) return '复刻'
     if (id == 1) return '平民'
     if (id == 2) return '狼王'
     if (id == 3) return '小狼'
