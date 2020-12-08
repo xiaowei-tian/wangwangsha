@@ -1,4 +1,5 @@
 /* 身份对照表
+0: 复刻
 1：平民
 2：狼王
 3：普通狼
@@ -7,12 +8,14 @@
 6：猎人
 7：白痴
 8：禁言长老
+9: 守卫
 */
 
 function validate(currentAlloc) {
     var totalwangwang = 0
     for (var i = 0; i < currentAlloc.length; i++) {
-        if (currentAlloc[i][0] == currentAlloc[i][1] && currentAlloc[i][0] == 1) {
+        if ((currentAlloc[i][0] == currentAlloc[i][1] && currentAlloc[i][0] == 1) 
+           || (currentAlloc[i][0] + currentAlloc[i][1]) == 1 ) { // we have a replica wangwang.
             totalwangwang += 1
         }
         if (currentAlloc[i][0] == currentAlloc[i][1] && currentAlloc[i][0] == 3) {

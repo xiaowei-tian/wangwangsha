@@ -1,4 +1,5 @@
 /* 身份对照表
+0: 复刻
 1：平民
 2：狼王
 3：普通狼
@@ -7,7 +8,7 @@
 6：猎人
 7：白痴
 8：禁言长老
-9：小女孩
+9: 守卫
 */
 var cors = require('cors')
 const express = require('express')
@@ -17,7 +18,6 @@ const identityLoader = require('./identityloader.js')
 const parser = require('./parser.js')
 const app = express()
 const port = 3000
-const defaultIdentityList = [1,1,1,1,1,1,1,1,2,3,3,4,5,6,7,8]
 const defaultTotalPlayer = 8
 
 app.use(cors())
@@ -39,7 +39,8 @@ app.get('/getIdentity', (req,res) => {
 
 app.get('/createGame', (req, res) => {
   console.log(req.query.totalPlayer)
-  var identities = identityGenerator.generateIdentity(defaultIdentityList, defaultTotalPlayer)
+  var players = req.query.totalPlayer ? req.query.totalPlayer : defaultTotalPlayer
+  var identities = identityGenerator.generateIdentity(players)
   var result = parser.parseAll(identities, defaultTotalPlayer)
   game.createNewGame(identities, defaultTotalPlayer, function(err, gameId) {
     result += '<p>房间号：'
