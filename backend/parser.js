@@ -32,6 +32,7 @@ function translate(id) {
     if (id == 6) return '猎人'
     if (id == 7) return '白痴'
     if (id == 8) return '长老'
+    if (id == 8) return '守卫'
 }
 
 module.exports.parseAll = parseAll;
