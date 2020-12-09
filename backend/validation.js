@@ -28,6 +28,7 @@ function validate(currentAlloc) {
             return false
         }
     }
+    console.log(totalwangwang)
     if (totalwangwang <= 1 || totalwangwang > 2) return false
     return true
 }

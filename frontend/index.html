@@ -3,7 +3,7 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
-    function createGame() {
+    function createCustumGame() {
         var totalPlayer = Number(document.forms["gameForm"]["totalPlayer"].value)
         var peopleNum = Number(document.forms["gameForm"]["people"].value)
         var seerNum = Number(document.forms["gameForm"]["seer"].value)
@@ -13,9 +13,11 @@
         var hunterNum = Number(document.forms["gameForm"]["hunter"].value)
         var idiotNum = Number(document.forms["gameForm"]["idiot"].value)
         var silenceNum = Number(document.forms["gameForm"]["silence"].value)
-        var littlegirlNum = Number(document.forms["gameForm"]["littlegirl"].value)
+        var cloneNum = Number(document.forms["gameForm"]["clone"].value)
+        var guardNum = Number(document.forms["gameForm"]["guard"].value)
+        var standard = 0
         
-        if ((totalPlayer * 2) != (peopleNum + seerNum + werewolfNum + wolfkingNum + witchNum + hunterNum + idiotNum + silenceNum + littlegirlNum)) {
+        if ((totalPlayer * 2) != (peopleNum + seerNum + werewolfNum + wolfkingNum + witchNum + hunterNum + idiotNum + silenceNum + cloneNum + guardNum)) {
             alert("配置错误")
         } else if (werewolfNum + wolfkingNum < 3) {
             alert("配置错误")
@@ -37,7 +39,36 @@
                     hunterNum: hunterNum,
                     idiotNum: idiotNum,
                     silenceNum: silenceNum,
-                    littlegirlNum: littlegirlNum
+                    cloneNum: cloneNum,
+                    guardNum: guardNum,
+                    standard: standard
+                },
+                success: function(response) {
+                    $('#newGame').html(response)
+                    $('#createGame').hide();
+                    $('#init').hide();
+                },
+                error: function(response) {
+                    alert("shit happened")
+                }
+            })
+        }
+    }
+    function createStandardGame() {
+        var totalPlayer = Number(document.forms["gameForm"]["totalPlayer"].value)
+        var standard = 1
+        if (totalPlayer < 8 || totalPlayer > 9){
+            alert("不支持这个人数啊")
+        } else {
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:3000/createGame',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    totalPlayer: totalPlayer,
+                    standard: standard
                 },
                 success: function(response) {
                     $('#newGame').html(response)
@@ -83,12 +114,18 @@
         <label for="silence">禁言长老：</label>
         <input type="number" class="form-control" id="silence" value="1" min="0">
         <br>
-        <label for="littlegirl">小女孩：</label>
-        <input type="number" class="form-control" id="littlegirl" value="1" min="0">
+        <label for="clone">复刻：</label>
+        <input type="number" class="form-control" id="clone" value="1" min="0">
+        <br>
+        <label for="guard">守卫：</label>
+        <input type="number" class="form-control" id="guard" value="1" min="0">
     </form>
 </div>
 <div>
-    <button id="createGame" onclick="createGame()">创建游戏</button>
+    <button id="createCustumGame" onclick="createCustumGame()">创建自定义板子</button>
+</div>
+<div>
+    <button id="createStandardGame" onclick="createStandardGame()">创建常规的板子</button>
 </div>
 <div id="newGame"></div>
 </body>
