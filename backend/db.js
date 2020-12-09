@@ -2,8 +2,8 @@ const db = require('mysql')
 const pool = db.createPool({
     connectionLimit:    10,
     host:               'localhost',
-    user:               'root',
-    password:           'admin',
+    user:               'Please replace with your local db username',
+    password:           'Please replace with your local db password',
     database:           'wws'
 })
 
