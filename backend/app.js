@@ -40,8 +40,9 @@ app.get('/getIdentity', (req,res) => {
 app.get('/createGame', (req, res) => {
   console.log(req.query.totalPlayer)
   var standardGame = req.query.standard
+  var cutomizeBoard = req.query.gameBoard
   var players = req.query.totalPlayer ? req.query.totalPlayer : defaultTotalPlayer
-  var identities = identityGenerator.generateIdentity(players, req.query, standardGame)
+  var identities = identityGenerator.generateIdentity(players, cutomizeBoard, standardGame)
   var result = parser.parseAll(identities, players)
   game.createNewGame(identities, defaultTotalPlayer, function(err, gameId) {
     result += '<p>房间号：'

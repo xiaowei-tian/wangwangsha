@@ -2,27 +2,40 @@
 <html>
     <meta charset="utf-8" />
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
+    const roleDict = {
+        "replica": 0,
+        "villager": 1,
+        "wolfking": 2,
+        "werewolf": 3,
+        "seer": 4,
+        "witch": 5,
+        "hunter": 6,
+        "idiot": 7,
+        "silencer": 8,
+        "guard": 9,
+    }
     function createCustumGame() {
         var totalPlayer = Number(document.forms["gameForm"]["totalPlayer"].value)
-        var peopleNum = Number(document.forms["gameForm"]["people"].value)
-        var seerNum = Number(document.forms["gameForm"]["seer"].value)
-        var werewolfNum = Number(document.forms["gameForm"]["werewolf"].value)
-        var wolfkingNum = Number(document.forms["gameForm"]["wolfking"].value)
-        var witchNum = Number(document.forms["gameForm"]["witch"].value)
-        var hunterNum = Number(document.forms["gameForm"]["hunter"].value)
-        var idiotNum = Number(document.forms["gameForm"]["idiot"].value)
-        var silenceNum = Number(document.forms["gameForm"]["silence"].value)
-        var cloneNum = Number(document.forms["gameForm"]["clone"].value)
-        var guardNum = Number(document.forms["gameForm"]["guard"].value)
+        var gameBoard = constructGameboard()
         var standard = 0
-        
-        if ((totalPlayer * 2) != (peopleNum + seerNum + werewolfNum + wolfkingNum + witchNum + hunterNum + idiotNum + silenceNum + cloneNum + guardNum)) {
+        if (!gameBoard) {
+            alert("Game board creation failed, please check your configs")
+            return
+        }
+        console.log(gameBoard)
+        console.log(gameBoard.length)
+
+        if ((totalPlayer * 2) != gameBoard.length) {
             alert("配置错误")
-        } else if (werewolfNum + wolfkingNum < 3) {
-            alert("配置错误")
-        } else {
+        }
+        // } else if (werewolfNum + wolfkingNum < 3) {
+        //     alert("配置错误")
+        // } 
+        // in case we have more than 9 ppl, and we need more than 3 werewolfs. we take the valuse as is.
+        else {
             // Create Game
             $.ajax({
                 method: 'GET',
@@ -32,17 +45,7 @@
                 },
                 data: {
                     totalPlayer: totalPlayer,
-                    peopleNum: peopleNum,
-                    werewolfNum: werewolfNum,
-                    wolfkingNum: wolfkingNum,
-                    seerNum: seerNum,
-                    witchNum: witchNum,
-                    hunterNum: hunterNum,
-                    idiotNum: idiotNum,
-                    silenceNum: silenceNum,
-                    cloneNum: cloneNum,
-                    guardNum: guardNum,
-                    standard: standard
+                    gameBoard: gameBoard
                 },
                 success: function(response) {
                     $('#newGame').html(response)
@@ -82,6 +85,21 @@
             })
         }
     }
+    function constructGameboard(){
+        var roleElements = document.getElementById("gameForm").elements;
+        var gameBoard = [] 
+        for (var i = 0, element; element = roleElements[i++];) {
+            var value = parseInt(element.value)
+            var roleName = element.id
+            if (roleName === "totalPlayer") continue
+            if (_.isNaN(value)) {
+                alert(`${roleName} is empty of null, please enter a number`)
+                return false
+            }
+            gameBoard = gameBoard.concat(Array(value).fill(roleDict[roleName]))
+        }
+        return gameBoard
+    }
 </script>
 </head>
 <body>
@@ -92,7 +110,7 @@
         <input type="number" class="form-control" id="totalPlayer" min="1">
         <br>
         <label for="people">平民：</label>
-        <input type="number" class="form-control" id="people" min="1">
+        <input type="number" class="form-control" id="villager" min="1">
         <br>
         <label for="werewolf">狼人：</label>
         <input type="number" class="form-control" id="werewolf" value="2" min="1">
@@ -113,10 +131,10 @@
         <input type="number" class="form-control" id="idiot" value="1" min="0">
         <br>
         <label for="silence">禁言长老：</label>
-        <input type="number" class="form-control" id="silence" value="1" min="0">
+        <input type="number" class="form-control" id="silencer" value="1" min="0">
         <br>
         <label for="clone">复刻：</label>
-        <input type="number" class="form-control" id="clone" value="1" min="0">
+        <input type="number" class="form-control" id="replica" value="1" min="0">
         <br>
         <label for="guard">守卫：</label>
         <input type="number" class="form-control" id="guard" value="1" min="0">
