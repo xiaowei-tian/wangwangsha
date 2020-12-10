@@ -16,11 +16,15 @@ const game = require('./game.js')
 const identityGenerator = require('./identitygenerator.js')
 const identityLoader = require('./identityloader.js')
 const parser = require('./parser.js')
+const db = require('./db.js')
+const sqlCommands = require('./sqlCommds.js')
 const app = express()
 const port = 3000
 const defaultTotalPlayer = 8
 
 app.use(cors())
+app.use(express.urlencoded());
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('<h2>旺旺杀自助发牌小程序</h2>')
@@ -50,6 +54,18 @@ app.get('/createGame', (req, res) => {
     result += '</p>'
     res.send(result)
   })
+})
+
+app.post('/saveGameBoards', (req, res) => {
+  var name = req.body.boardName
+  var totalPlayer = req.body.totalPlayer
+  var gameBoard = req.body.gameBoard
+  var cmd = sqlCommands.sql_insert_gameboard(name, totalPlayer, gameBoard)
+  db.queryDB(cmd, res)
+})
+
+app.get('/getGameBoards', (req, res) => {
+  db.queryDB('select * from game_board')
 })
 
 app.listen(port, () => {  
