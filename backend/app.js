@@ -61,7 +61,13 @@ app.post('/saveGameBoards', (req, res) => {
   var totalPlayer = req.body.totalPlayer
   var gameBoard = req.body.gameBoard
   var cmd = sqlCommands.sql_insert_gameboard(name, totalPlayer, gameBoard)
-  db.queryDB(cmd, res)
+  db.queryDB(cmd, function(err, result){
+    if(err) {
+      console.log(err)
+      res.status(500).json(err)
+    }
+    res.status(200).json(result)
+  })
 })
 
 app.get('/getGameBoards', (req, res) => {
