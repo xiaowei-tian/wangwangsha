@@ -4,7 +4,7 @@ const gameBoard = require('./gameboard.js')
 // This will generate a valid identity combination
  function generateIdentity(totalPlayer, customizedBoard, standardGame) {
     while (true) {
-        var identities = standardGame == 1 ? standardGame == 1 : customizedBoard
+        var identities = standardGame == 1 ? gameBoard.useBoard(totalPlayer) : customizedBoard
         var identitiesCopy = [...identities]
         var totalPlayerCopy = totalPlayer
         var result = allocateIdentity(identitiesCopy, totalPlayerCopy)
