@@ -2,13 +2,9 @@ const validation = require('./validation.js')
 const gameBoard = require('./gameboard.js')
 
 // This will generate a valid identity combination
- function generateIdentity(totalPlayer, gameBoard, standardGame) {
+ function generateIdentity(totalPlayer, customizedBoard, standardGame) {
     while (true) {
-        if (standardGame == 1) {
-            var identities = gameBoard.useBoard(totalPlayer)
-        } else {
-            var identities = gameBoard
-        }
+        var identities = standardGame == 1 ? standardGame == 1 : customizedBoard
         var identitiesCopy = [...identities]
         var totalPlayerCopy = totalPlayer
         var result = allocateIdentity(identitiesCopy, totalPlayerCopy)
