@@ -2,8 +2,10 @@
 <html>
     <meta charset="utf-8" />
 <head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 <script type="text/javascript">
     const roleDict = {
         "replica": 0,
@@ -18,7 +20,7 @@
         "guard": 9,
     }
     function createCustumGame() {
-        var totalPlayer = Number(document.forms["gameForm"]["totalPlayer"].value)
+        var totalPlayer = Number(document.forms["customGameForm"]["totalPlayer"].value)
         var gameBoard = constructGameboard()
         var standard = 0
         if (!gameBoard) {
@@ -76,7 +78,6 @@
                 },
                 success: function(response) {
                     $('#newGame').html(response)
-                    $('#createGame').hide();
                     $('#init').hide();
                 },
                 error: function(response) {
@@ -86,7 +87,7 @@
         }
     }
     function constructGameboard(){
-        var roleElements = document.getElementById("gameForm").elements;
+        var roleElements = document.getElementById("customGameForm").elements;
         var gameBoard = [] 
         for (var i = 0, element; element = roleElements[i++];) {
             var value = parseInt(element.value)
@@ -103,49 +104,56 @@
 </script>
 </head>
 <body>
-<h1>旺旺杀法官小助手</h1>
-<div id="init" style="padding: 1cm;">
-    <form id="gameForm">
-        <label for="totalPlayer">玩家总数：</label>
-        <input type="number" class="form-control" id="totalPlayer" min="1">
-        <br>
-        <label for="people">平民：</label>
-        <input type="number" class="form-control" id="villager" min="1">
-        <br>
-        <label for="werewolf">狼人：</label>
-        <input type="number" class="form-control" id="werewolf" value="2" min="1">
-        <br>
-        <label for="wolfking">狼王：</label>
-        <input type="number" class="form-control" id="wolfking" value="1" min="1">
-        <br>
-        <label for="seer">预言家：</label>
-        <input type="number" class="form-control" id="seer" value="1" min="1">
-        <br>
-        <label for="witch">女巫：</label>
-        <input type="number" class="form-control" id="witch" value="1" min="1">
-        <br>
-        <label for="hunter">猎人：</label>
-        <input type="number" class="form-control" id="hunter" value="1" min="1">
-        <br>
-        <label for="idiot">白痴：</label>
-        <input type="number" class="form-control" id="idiot" value="1" min="0">
-        <br>
-        <label for="silence">禁言长老：</label>
-        <input type="number" class="form-control" id="silencer" value="1" min="0">
-        <br>
-        <label for="clone">复刻：</label>
-        <input type="number" class="form-control" id="replica" value="1" min="0">
-        <br>
-        <label for="guard">守卫：</label>
-        <input type="number" class="form-control" id="guard" value="1" min="0">
-    </form>
+    <div style="width:800px; margin:0 auto;"><h1>旺旺杀法官小助手</h1></div>
+
+<div id="init" class="container">
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a class="nav-link active" data-bs-toggle="tab" href="#standard" role="tab" aria-controls="nav-home" aria-selected="true">标准游戏</a>
+          <a class="nav-link" data-bs-toggle="tab" href="#custom" role="tab" aria-controls="nav-profile" aria-selected="false">自定义游戏</a>
+        </div>
+      </nav>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="standard" role="tabpanel" data-toggle="tab">
+            <form id="gameForm">
+                <label for="totalPlayer">玩家总数(8 or 9)：</label>
+                <input type="number" class="form-control" id="totalPlayer" min="1"> 
+            </form>
+            <div>
+                <button id="createStandardGame" onclick="createStandardGame()">创建常规的板子</button>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="custom" role="tabpanel" data-toggle="tab">
+            <form id="customGameForm">
+            <label for="totalPlayer">玩家总数：</label>
+            <input type="number" class="form-control" id="totalPlayer" min="1">
+            <label for="people">平民：</label>
+            <input type="number" class="form-control" id="villager" min="1">
+            <label for="werewolf">狼人：</label>
+            <input type="number" class="form-control" id="werewolf" value="2" min="1">
+            <label for="wolfking">狼王：</label>
+            <input type="number" class="form-control" id="wolfking" value="1" min="1">
+            <label for="seer">预言家：</label>
+            <input type="number" class="form-control" id="seer" value="1" min="1">
+            <label for="witch">女巫：</label>
+            <input type="number" class="form-control" id="witch" value="1" min="1">
+            <label for="hunter">猎人：</label>
+            <input type="number" class="form-control" id="hunter" value="1" min="1">
+            <label for="idiot">白痴：</label>
+            <input type="number" class="form-control" id="idiot" value="1" min="0">
+            <label for="silence">禁言长老：</label>
+            <input type="number" class="form-control" id="silencer" value="1" min="0">
+            <label for="clone">复刻：</label>
+            <input type="number" class="form-control" id="replica" value="1" min="0">
+            <label for="guard">守卫：</label>
+            <input type="number" class="form-control" id="guard" value="1" min="0">
+            </form>
+            <div>
+                <button id="createCustumGame" onclick="createCustumGame()">创建自定义板子</button>
+            </div>
+        </div>
+      </div>
 </div>
-<div>
-    <button id="createCustumGame" onclick="createCustumGame()">创建自定义板子</button>
-</div>
-<div>
-    <button id="createStandardGame" onclick="createStandardGame()">创建常规的板子</button>
-</div>
-<div id="newGame"></div>
+<div id="newGame" class="container"></div>
 </body>
 </html>

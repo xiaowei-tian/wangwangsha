@@ -1,5 +1,5 @@
 function parseAll(identities, totalPlayer) {
-    var result = '<h2>旺旺杀发牌小程序</h2>'
+    var result = ''
     for (var i = 0; i < totalPlayer; i++) {
         result = result.concat('<p>')
         result = result.concat(i + 1)
