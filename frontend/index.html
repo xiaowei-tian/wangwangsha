@@ -100,10 +100,37 @@
         }
         return gameBoard
     }
+    function getSavedGameBoards(){
+        $.ajax({
+            method: 'GET',
+            url: 'http://localhost:3000/getGameBoards',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            success: function(response) {
+                $('#savedGameBoards').empty();
+                $.each(response, function(i, p) {
+                    $('#savedGameBoards').append($('<div></div>').val(p.board_name).html(p.board_name));
+                });
+            },
+            error: function(response) {
+                alert("shit happened")
+            }
+        })
+    }
+    function toogleDropDown(){
+        getSavedGameBoards()
+        $('#savedGameBoards').classList.toggle("show");
+    }
 </script>
 </head>
 <body>
 <h1>旺旺杀法官小助手</h1>
+<div class="dropDown">
+    <button onclick="toogleDropDown()" class="dropbtn">Show saved gameBoards</button>
+    <div id="savedGameBoards" class="dropdown-content">
+    </div>
+</div>
 <div id="init" style="padding: 1cm;">
     <form id="gameForm">
         <label for="totalPlayer">玩家总数：</label>

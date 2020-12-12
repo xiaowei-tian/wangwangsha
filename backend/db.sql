@@ -6,5 +6,6 @@ CREATE TABLE `game_boards` (
     `id` INTEGER NOT NULL AUTO_INCREMENT, 
     `board_name` VARCHARACTER(45) NOT NULL, 
     `total_player` INTEGER NOT NULL , 
-    `identities` VARCHARACTER (45) NOT NULL , 
-    PRIMARY KEY ( `id` ) ) ;
+    `identities` VARCHARACTER (45) NOT NULL,
+    UNIQUE(`board_name`),
+    PRIMARY KEY ( `id` ) );

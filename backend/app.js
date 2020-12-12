@@ -71,7 +71,14 @@ app.post('/saveGameBoards', (req, res) => {
 })
 
 app.get('/getGameBoards', (req, res) => {
-  db.queryDB('select * from game_board')
+  var cmd = sqlCommands.sql_getAll_gameboard()
+  db.queryDB(cmd, function(err, result){
+    if(err) {
+      console.log(err)
+      res.status(500).json(err)
+    }
+    res.status(200).json(result)
+  })
 })
 
 app.listen(port, () => {  
