@@ -28,7 +28,6 @@ app.get('/', (req, res) => {
 
 app.get('/getIdentity', (req,res) => {
   identityLoader.loadIdentityByGameId(req.query.gameId, req.query.playerId, function(err, result){
-    console.log(result)
     if (err) {
       res.send(err)
     } else {
@@ -38,7 +37,6 @@ app.get('/getIdentity', (req,res) => {
 })
 
 app.get('/createGame', (req, res) => {
-  console.log(req.query.totalPlayer)
   var standardGame = req.query.standard
   var cutomizeBoard = req.query.gameBoard
   var players = req.query.totalPlayer ? req.query.totalPlayer : defaultTotalPlayer
@@ -49,6 +47,38 @@ app.get('/createGame', (req, res) => {
     result += gameId
     result += '</p>'
     res.send(result)
+  })
+})
+
+/* 
+  Create a new game
+ */
+app.get('/createGamev2', (req, res) => {
+  var standardGame = req.query.standard
+  var cutomizeBoard = req.query.gameBoard
+  var players = req.query.totalPlayer ? req.query.totalPlayer : defaultTotalPlayer
+  var identities = identityGenerator.generateIdentity(players, cutomizeBoard, standardGame)
+  var result = parser.parseAll(identities, players)
+  game.createNewGamev2(identities, defaultTotalPlayer, function(err, gameId) {
+    result += '<p>房间号：'
+    result += gameId
+    result += '</p>'
+    res.send(result)
+  })
+})
+
+/* 
+  Join a existing game by room code and player Id
+ */
+app.get('/joinGame', (req, res) => {
+  var roomCode = req.query.roomCode
+  var playerId = req.query.playerId
+  identityLoader.loadIdentityByRoomCodeAndPlayerId(roomCode, playerId, function(err, result){
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(parser.parsePlayer(result))
+    }
   })
 })
 

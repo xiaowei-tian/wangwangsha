@@ -3,7 +3,7 @@ const pool = db.createPool({
     connectionLimit:    10,
     host:               'localhost',
     user:               'root',
-    password:           'asf1234',
+    password:           'root',
     database:           'wws'
 })
 

@@ -101,6 +101,10 @@
         }
         return gameBoard
     }
+    function redirect(){
+        var url = "http://www.wszdz.com/player.html";
+        window.location.href = url;
+    }
 </script>
 </head>
 <body>
@@ -153,7 +157,16 @@
             </div>
         </div>
       </div>
+      <div>
+        <button name="redirect" onClick="redirect()">
+            查身份戳我    
+        </button>
+    </div>
 </div>
 <div id="newGame" class="container"></div>
+
+
 </body>
+
+
 </html>
