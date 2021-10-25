@@ -13,12 +13,9 @@ function parseAll(identities, totalPlayer) {
 }
 
 function parsePlayer(identity) {
-    var result = '<h2>你的身份</h2>'
-    result += '<p>'
-    result += translate(identity[0])
-    result += ', '
-    result += translate(identity[1])
-    result += '</p>'
+    var result = identity[0]
+    result += ','
+    result += identity[1]
     return result
 }
 
