@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        const roleDict = {
+            "replica": 0,
+            "villager": 1,
+            "wolfking": 2,
+            "werewolf": 3,
+            "seer": 4,
+            "witch": 5,
+            "hunter": 6,
+            "idiot": 7,
+            "silencer": 8,
+            "guard": 9,
+        }
+        function findRoleByRoleNumber(roleNumber) {
+            switch (roleNumber) {
+                case "0":
+                    return "replica.jpeg";
+                case "1":
+                    return "villager.jpeg";
+                case "2":
+                    return "wolfking.jpeg";
+                case "3":
+                    return "werewolf.jpeg";
+                case "4":
+                    return "seer.jpeg";
+                case "5":
+                    return "witch.jpeg";
+                case "6":
+                    return "hunter.jpeg";
+                case "7":
+                    return "idiot.jpeg";
+                case "8":
+                    return "silencer.jpeg";
+                case "9":
+                    return "guard.jpeg";
+            }
+        }
+        function setCookie(cname, cvalue, exhours) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
+            let expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function createCustumGame() {
+            var totalPlayer = Number(document.forms["customGameForm"]["totalPlayer"].value)
+            var gameBoard = constructGameboard()
+            var standard = 0
+            if (!gameBoard) {
+                alert("Game board creation failed, please check your configs")
+                return
+            }
+            console.log(gameBoard)
+            console.log(gameBoard.length)
+
+            if ((totalPlayer * 2) != gameBoard.length) {
+                alert("配置错误")
+            }
+            // } else if (werewolfNum + wolfkingNum < 3) {
+            //     alert("配置错误")
+            // } 
+            // in case we have more than 9 ppl, and we need more than 3 werewolfs. we take the valuse as is.
+            else {
+                // Create Game
+                $.ajax({
+                    method: 'GET',
+                    url: 'http://localhost:3000/createGamev2',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        totalPlayer: totalPlayer,
+                        gameBoard: gameBoard
+                    },
+                    success: function (response) {
+                        $('#newGame').html(response)
+                        $('#createGame').hide();
+                        $('#init').hide();
+                    },
+                    error: function (response) {
+                        alert("shit happened")
+                    }
+                })
+            }
+        }
+        function createStandardGame() {
+            var totalPlayer = Number(document.forms["gameForm"]["totalPlayer"].value)
+            var standard = 1
+            if (totalPlayer < 8 || totalPlayer > 9) {
+                alert("不支持这个人数啊")
+            } else {
+                $.ajax({
+                    method: 'GET',
+                    url: 'http://localhost:3000/createGamev2',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        totalPlayer: totalPlayer,
+                        standard: standard
+                    },
+                    success: function (response) {
+                        $('#newGame').html(response)
+                        $('#init').hide();
+                    },
+                    error: function (response) {
+                        alert("shit happened")
+                    }
+                })
+            }
+        }
+        function constructGameboard() {
+            var roleElements = document.getElementById("customGameForm").elements;
+            var gameBoard = []
+            for (var i = 0, element; element = roleElements[i++];) {
+                var value = parseInt(element.value)
+                var roleName = element.id
+                if (roleName === "totalPlayer") continue
+                if (_.isNaN(value)) {
+                    alert(`${roleName} is empty of null, please enter a number`)
+                    return false
+                }
+                gameBoard = gameBoard.concat(Array(value).fill(roleDict[roleName]))
+            }
+            return gameBoard
+        }
+        function joinGame() {
+            var roomCode = document.forms["form"]["roomCode"].value
+            var playerId = document.forms["form"]["playerId"].value
+            setCookie("playerId", playerId, 3);
+            setCookie("roomCode", roomCode, 3);
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:3000/joinGame',
+                data: {
+                    roomCode: roomCode,
+                    playerId: playerId
+                },
+                success: function (response) {
+                    let identities = response.split(",")
+                    document.getElementById('identity0').src = "../profile_pic/" + findRoleByRoleNumber(identities[0]);
+                    document.getElementById('identity1').src = "../profile_pic/" + findRoleByRoleNumber(identities[1]);
+                    $('#title').html('<h1>身份查验</h1>')
+                    $('#player').show();
+                    $('#init').hide();
+                },
+                error: function (xhr) {
+                    $('#newGame').html('shit happened');
+                    $('#init').hide();
+                }
+            });
+            // setInterval(function(){ 
+            //     checkGameStates(); }, 
+            //     3000);
+        }
+        function checkGameStates() {
+
+        }
+    </script>
+</head>
+
+<body>
+    <div id="title" style="width:800px; margin:0 auto;">
+        <h1>旺旺杀法官小助手</h1>
+    </div>
+
+    <div id="init" class="container">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-link" data-bs-toggle="tab" href="#standard" role="tab" aria-controls="nav-home"
+                    aria-selected="true">标准游戏</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#custom" role="tab" aria-controls="nav-profile"
+                    aria-selected="false">自定义游戏</a>
+                    <a class="nav-link active" data-bs-toggle="tab" href="#join" role="tab" aria-controls="nav-profile"
+                    aria-selected="false">加入游戏</a>
+            </div>
+        </nav>
+        <div class="tab-content">
+            <div class="tab-pane fade" id="standard" role="tabpanel" data-toggle="tab">
+                <form id="gameForm">
+                    <label for="totalPlayer">玩家总数(8 or 9)：</label>
+                    <input type="number" class="form-control" id="totalPlayer" min="1">
+                </form>
+                <div>
+                    <button id="createStandardGame" onclick="createStandardGame()">创建常规的板子</button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="custom" role="tabpanel" data-toggle="tab">
+                <form id="customGameForm">
+                    <label for="totalPlayer">玩家总数：</label>
+                    <input type="number" class="form-control" id="totalPlayer" min="1">
+                    <label for="people">平民：</label>
+                    <input type="number" class="form-control" id="villager" min="1">
+                    <label for="werewolf">狼人：</label>
+                    <input type="number" class="form-control" id="werewolf" value="2" min="1">
+                    <label for="wolfking">狼王：</label>
+                    <input type="number" class="form-control" id="wolfking" value="1" min="1">
+                    <label for="seer">预言家：</label>
+                    <input type="number" class="form-control" id="seer" value="1" min="1">
+                    <label for="witch">女巫：</label>
+                    <input type="number" class="form-control" id="witch" value="1" min="1">
+                    <label for="hunter">猎人：</label>
+                    <input type="number" class="form-control" id="hunter" value="1" min="1">
+                    <label for="idiot">白痴：</label>
+                    <input type="number" class="form-control" id="idiot" value="1" min="0">
+                    <label for="silence">禁言长老：</label>
+                    <input type="number" class="form-control" id="silencer" value="1" min="0">
+                    <label for="clone">复刻：</label>
+                    <input type="number" class="form-control" id="replica" value="1" min="0">
+                    <label for="guard">守卫：</label>
+                    <input type="number" class="form-control" id="guard" value="1" min="0">
+                </form>
+                <div>
+                    <button id="createCustumGame" onclick="createCustumGame()">创建自定义板子</button>
+                </div>
+            </div>
+            <div class="tab-pane fade show active" id="join" role="tabpanel" data-toggle="tab">
+                <form id="form" role="form" style="width: 100%">
+                    <div class="form-group">
+                        <label for="roomCode">房间号：</label>
+                        <input type="text" class="form-control" id="roomCode">
+                    </div>
+                    <div class="form-group">
+                        <label for="playerId">玩家号：</label>
+                        <input type="text" class="form-control" id="playerId">
+                    </div>
+                </form>
+                <button id="joinGame" onclick="joinGame()">加入游戏</button>
+            </div>
+        </div>
+    </div>
+    <div id = "newGame" class="container"></div>
+    <div id = "player" class="container" style="display: none;">
+        <div class="row">
+            <div class="col">
+                <img id="identity0" src="../profile_pic/villager.jpeg">
+            </div>
+            <div class="col">
+                <img id="identity1" src="../profile_pic/villager.jpeg">
+            </div>
+          </div>
+    </div>
+</body>
+
+</html>
