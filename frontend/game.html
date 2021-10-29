@@ -112,7 +112,7 @@
         function createStandardGame() {
             var totalPlayer = Number(document.forms["gameForm"]["totalPlayer"].value)
             var standard = 1
-            if (totalPlayer < 8 || totalPlayer > 9) {
+            if (totalPlayer < 7 || totalPlayer > 9) {
                 alert("不支持这个人数啊")
             } else {
                 $.ajax({

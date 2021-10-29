@@ -6,7 +6,7 @@ CREATE TABLE `game`
     `player_id` INTEGER NOT NULL,
     `identity1` INTEGER NOT NULL ,
     `identity2` INTEGER NOT NULL ,
-    `player_state` VARCHARACTER (200) NOT NULL ,
+    `player_state` VARCHARACTER (200),
     PRIMARY KEY (`room_code`, `player_id`)
 );
 
