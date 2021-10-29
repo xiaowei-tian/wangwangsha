@@ -2,6 +2,7 @@ const db = require('./db.js')
 const gameIdLength = 4
 
 function createNewGamev2(identities, totalPlayer, callback) {
+    console.log(totalPlayer);
     var room_code = generateGameId()
     var query = 'insert into game (room_code, player_id, identity1, identity2) values ?'
     var values = [];
